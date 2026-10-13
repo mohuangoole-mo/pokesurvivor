@@ -145,11 +145,37 @@ G.SettingsUI = (() => {
          </div><p class="note" id="set-msg"></p>`;
   }
 
+  const TYPE_ZH = { fire: '火', water: '水', grass: '草', electric: '電', ice: '冰',
+    fighting: '格鬥', poison: '毒', ground: '地面', flying: '飛行', psychic: '超能力',
+    bug: '蟲', rock: '岩石', ghost: '幽靈', dragon: '龍', dark: '惡', steel: '鋼', fairy: '妖精' };
+
+  function typeExpandHtml() {
+    const pl = G.Game.player;
+    const picked = pl ? (pl.extraTypes || []) : [];
+    const ready = pl && G.Cheats.canPickType(pl);
+    const tags = picked.length
+      ? picked.map(t => `<span class="chip on" style="pointer-events:none">${esc(TYPE_ZH[t] || t)}</span>`).join('')
+      : '<small>還沒選過額外屬性。</small>';
+    if (!pl) {
+      return `<p class="note">要進一局遊戲，角色生成後才能選額外屬性。</p>`;
+    }
+    const picker = ready
+      ? `<p class="sub">目前格子已經學滿，可以選一個新屬性，開出下一格：</p>
+         <div class="chips set-chips">${Object.keys(TYPE_ZH).filter(t => !picked.includes(t))
+           .map(t => `<button class="chip" data-type="${t}">${esc(TYPE_ZH[t])}</button>`).join('')}</div>`
+      : `<p class="sub">目前招式格還沒學滿（${pl.slots.length}/${pl.maxMoves}），先把現有格子學滿才能選下一個屬性。</p>`;
+    return `<div class="set-row"><div class="grow"><b>已解鎖的額外屬性</b></div></div><div class="chips set-chips">${tags}</div>` + picker;
+  }
+
   function renderCheats(box) {
     box.innerHTML = section('難度', '切換後立刻生效，下一局就有效果。')
-      + choice('difficulty', [['easy', '簡單（怪量正常·經驗×2）'], ['normal', '普通（原始狀態）'], ['hard', '困難（怪量×3）'], ['hell', '地獄（怪量×10）']])
+      + choice('difficulty', [['easy', '簡單（怪量正常·經驗×2）'], ['normal', '普通（原始狀態）'], ['hard', '困難（怪量×3）'], ['hell', '地獄（怪量×10）'],
+                              ['purgatory', '煉獄（怪量×20）'], ['abyss', '深淵（怪量×35）'], ['despair', '絕望（怪量×55）'], ['apocalypse', '終焉（怪量×80）']])
       + section('戰鬥')
       + toggle('cheatGod', '無敵模式', '完全不會被打死（還是會看到受擊特效）。')
+      + toggle('cheatAllMoves', '招式全部合一', '取消 4 格上限，等級卡會一直給新招，已學會的招式全部同時打出來，不用再切換招式格。')
+      + toggle('cheatTypeExpand', '元素擴充學習', '原本招式格學滿（4 個）就不會再出新招式了；開著這個，學滿之後可以選一個新屬性，多開 1 格來學那個屬性的招式，重複這個流程可以一直加格、一直加屬性。')
+      + (G.Settings.get('cheatTypeExpand') ? typeExpandHtml() : '')
       + `<div class="set-row"><div class="grow"><b>攻擊傷害倍率</b><small>影響全部招式的輸出傷害。</small></div></div>`
       + choice('cheatDmgMul', [[1, '×1'], [2, '×2'], [5, '×5'], [10, '×10'], [50, '×50']])
       + section('資源', '每秒自動補滿，開著就一直是滿的。')
@@ -162,6 +188,7 @@ G.SettingsUI = (() => {
            <button class="btn gold" data-act="gachaShiny">下一抽必異色</button>
            <button class="btn gold" data-act="maxUp">強化全滿</button>
            <button class="btn gold" data-act="allMissions">任務／成就全完成</button>
+           <button class="btn gold" data-act="rift">強制開啟裂縫</button>
          </div>`;
   }
 
@@ -174,12 +201,19 @@ G.SettingsUI = (() => {
         else if (b.dataset.act === 'gachaShiny') C.forceGachaShiny(1);
         else if (b.dataset.act === 'maxUp') C.maxUpgrades();
         else if (b.dataset.act === 'allMissions') { C.completeMissions(); C.completeAchievements(); }
+        else if (b.dataset.act === 'rift') C.forceRift();
         G.UI.toast('完成');
       };
     });
     box.querySelectorAll('.switch[data-k]').forEach(b => { b.onclick = () => { G.Settings.set(b.dataset.k, !G.Settings.get(b.dataset.k)); render(); }; });
     box.querySelectorAll('.chip[data-k]').forEach(b => {
       b.onclick = () => { const v = b.dataset.v; G.Settings.set(b.dataset.k, isNaN(+v) ? v : +v); render(); };
+    });
+    box.querySelectorAll('.chip[data-type]').forEach(b => {
+      b.onclick = () => {
+        const pl = G.Game.player;
+        if (pl && G.Cheats.pickType(pl, b.dataset.type)) { G.UI.toast('已解鎖：' + (TYPE_ZH[b.dataset.type] || b.dataset.type)); render(); }
+      };
     });
     const full = $('set-full'); if (full) full.onclick = toggleFull;
     box.querySelectorAll('[data-lang]').forEach(b => { b.onclick = () => { if (b.dataset.lang !== G.I18n.lang) G.I18n.set(b.dataset.lang); }; });

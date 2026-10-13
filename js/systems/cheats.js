@@ -12,13 +12,36 @@ G.Cheats = (() => {
     easy:   { spawn: 1,  cap: 1,  xp: 2 },
     normal: { spawn: 1,  cap: 1,  xp: 1 },
     hard:   { spawn: 3,  cap: 3,  xp: 1 },
-    hell:   { spawn: 10, cap: 10, xp: 1 }
+    hell:   { spawn: 10, cap: 10, xp: 1 },
+    purgatory: { spawn: 20, cap: 20, xp: 1 },
+    abyss:     { spawn: 35, cap: 35, xp: 1 },
+    despair:   { spawn: 55, cap: 55, xp: 1 },
+    apocalypse:{ spawn: 80, cap: 80, xp: 1 }
   };
   function diff() { return DIFF[G.Settings.get('difficulty')] || DIFF.normal; }
   const spawnMul = () => diff().spawn;
   const capMul = () => diff().cap;
   const xpMul = () => diff().xp;
   const godMode = () => !!G.Settings.get('cheatGod');
+  const allMoves = () => !!G.Settings.get('cheatAllMoves');
+  const typeExpand = () => !!G.Settings.get('cheatTypeExpand');
+
+  /** 目前這個角色，額外屬性解鎖帶來的招式池（還沒學過的也在裡面，交給 levelup.js 過濾）。 */
+  function extraPool(pl) {
+    const ids = new Set();
+    for (const t of (pl.extraTypes || [])) for (const id of (G.Moves.POOL[t] || [])) ids.add(id);
+    return [...ids];
+  }
+
+  /** 是否已經把目前的格子學滿，可以選下一個額外屬性了。 */
+  function canPickType(pl) { return pl.slots.length >= pl.maxMoves; }
+
+  /** 選一個額外屬性：學滿才能選，同屬性不能重複選。 */
+  function pickType(pl, type) {
+    if (!canPickType(pl) || pl.extraTypes.includes(type)) return false;
+    pl.extraTypes.push(type);
+    return true;
+  }
   const dmgMul = () => { const v = +G.Settings.get('cheatDmgMul'); return v > 0 ? v : 1; };
 
   /** Se llama sola cada segundo: mantiene monedas/tickets/dex "llenos" mientras estén activados. */
@@ -78,10 +101,12 @@ G.Cheats = (() => {
 
   function forceWildShiny(n = 3) { G.Spawner && G.Spawner.debugForceShiny(n); }
   function forceGachaShiny(n = 1) { G.Gacha && G.Gacha.debugForceShiny(n); }
+  function forceRift() { G.Rift && G.Rift.debugOpen(); }
 
   setInterval(applySave, 1000);
 
-  return { spawnMul, capMul, xpMul, godMode, dmgMul, applySave,
+  return { spawnMul, capMul, xpMul, godMode, dmgMul, allMoves, applySave,
+           typeExpand, extraPool, canPickType, pickType,
            completeMissions, completeAchievements, maxUpgrades,
-           forceWildShiny, forceGachaShiny };
+           forceWildShiny, forceGachaShiny, forceRift };
 })();

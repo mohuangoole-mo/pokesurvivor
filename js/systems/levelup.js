@@ -36,7 +36,9 @@ G.LevelUp = (() => {
       // Con 2 potenciadores ya no se ofrecen más: los buff no hacen daño y
       // llenar los 4 huecos con ellos deja la run sin salida.
       const buffs = pl.moves.filter(m => m.kind === 'buff').length;
-      const pool = G.Moves.poolFor(pl.mon).filter(id =>
+      // 金手指「元素擴充」開著時，額外屬性解鎖的招式也加進候選池。
+      const extra = (G.Cheats && G.Cheats.typeExpand()) ? G.Cheats.extraPool(pl) : [];
+      const pool = [...new Set([...G.Moves.poolFor(pl.mon), ...extra])].filter(id =>
         !pl.hasMove(id) && !(pl.banned && pl.banned.has(id)) && !(buffs >= 2 && G.Moves.BY_ID[id].kind === 'buff'));
       for (const id of G.U.pickN(pool, 6)) {
         const d = G.Moves.BY_ID[id];

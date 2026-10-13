@@ -34,7 +34,7 @@ G.Player = class Player {
     this.moves = [];           // todos los movimientos aprendidos
     this.slots = [];           // huecos: cada uno, una lista de movimientos que se lanzan a la vez
     this.active = 0;           // hueco activo
-    this.maxMoves = 4;         // huecos
+    this.extraTypes = [];      // 金手指「元素擴充」：已選的額外屬性，依序each+1招式格
     this.bonds = 0;            // vínculos por usar (premio de los legendarios)
 
     this.buffs = {
@@ -84,6 +84,14 @@ G.Player = class Player {
   }
 
   cy() { return this.y; }
+
+  // 金手指「招式全部合一」開著時，解除 4 個招式格的上限（讓等級卡一直給新招）。
+  // 金手指「元素擴充」開著時，每多選一個額外屬性就多 1 格（學滿才能再選下一個）。
+  get maxMoves() {
+    if (G.Cheats && G.Cheats.allMoves()) return 99;
+    const extra = (G.Cheats && G.Cheats.typeExpand()) ? this.extraTypes.length : 0;
+    return 4 + extra;
+  }
 
   // ---------------- stats efectivos ----------------
   get atk() { return this.baseAtk * this.atkMul * (1 + this.buffs.atk.n * this.buffs.atk.amount) * (G.Cheats ? G.Cheats.dmgMul() : 1); }
@@ -190,7 +198,8 @@ G.Player = class Player {
   }
 
   /** Movimientos que se lanzan ahora (el grupo del hueco activo). */
-  activeGroup() { return this.slots[this.active] || []; }
+  // 金手指「招式全部合一」開著時，不管選到哪個招式格，全部已學會的招式一起打出去。
+  activeGroup() { return (G.Cheats && G.Cheats.allMoves()) ? this.moves : (this.slots[this.active] || []); }
 
   activeMove() { return this.activeGroup()[0]; }
 
