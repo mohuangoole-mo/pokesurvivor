@@ -361,6 +361,19 @@ G.HUD = (() => {
       ctx.fillStyle = '#f4f8ff';
       ctx.fillRect(bx + 13, by + 11, 5, 18); ctx.fillRect(bx + 22, by + 11, 5, 18);
       G.Touch.addButton(bx, by, bs, bs, () => G.Game.togglePause(), 8);
+
+      // 金手指：強制開裂縫（手機版沒有鍵盤，用這顆按鈕代替 PC 的 R 鍵）。
+      if (G.Cheats) {
+        const rx = bx - bs - 8;
+        roundRect(ctx, rx, by, bs, bs, 10);
+        ctx.fillStyle = 'rgba(40,20,60,.7)'; ctx.fill();
+        ctx.lineWidth = 2; ctx.strokeStyle = '#b48aff'; ctx.stroke();
+        ctx.font = F(800, 16);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#b48aff';
+        ctx.fillText('R', rx + bs / 2, by + bs / 2 + 6);
+        G.Touch.addButton(rx, by, bs, bs, () => G.Cheats.forceRift(), 8);
+      }
     }
 
     // pista de controles

@@ -63,6 +63,18 @@ G.Cheats = (() => {
     }
     // El marcador de arriba (monedas/tickets) no se actualiza solo: hay que avisarle.
     if (touched && G.UI && G.UI.refreshCoins) G.UI.refreshCoins();
+    checkTypeExpandPrompt();
+  }
+
+  /** 「元素擴充學習」：格子一學滿，自動開設定選單的金手指分頁讓你選下一個屬性。 */
+  function checkTypeExpandPrompt() {
+    if (!typeExpand()) return;
+    const pl = G.Game && G.Game.player;
+    if (!pl || pl.dead || !canPickType(pl)) return;
+    if (pl._typeExpandNotifiedAt === pl.maxMoves) return;   // 這一格已經提示過了，別一直彈
+    pl._typeExpandNotifiedAt = pl.maxMoves;
+    if (G.Game.state === 'playing') G.Game.togglePause();
+    if (G.SettingsUI && !G.SettingsUI.isOpen) G.SettingsUI.open('cheat');
   }
 
   /** 把目前所有任務（日/週）直接標記完成並領獎。 */
