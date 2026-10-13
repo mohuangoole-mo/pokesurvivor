@@ -231,6 +231,7 @@
       <button class="gen-tab" data-t="gfx">Gráficos</button>
       <button class="gen-tab" data-t="ctl">Controles</button>
       <button class="gen-tab" data-t="acc">Cuenta</button>
+      <button class="gen-tab" data-t="cheat">金手指</button>
       <button class="gen-tab" data-t="about">Acerca de</button>
     </div>
     <div id="set-body" class="set-body"></div>
@@ -532,6 +533,7 @@
 <script defer src="js/core/i18n.js"></script>
 <script defer src="js/data/lang-en.js"></script>
 <script defer src="js/core/settings.js"></script>
+<script defer src="js/systems/cheats.js"></script>
 <script defer src="js/data/music.js"></script>
 <script defer src="js/data/pokedex.js"></script>
 <script defer src="js/data/sprites-meta.js"></script>
@@ -603,5 +605,7 @@
 <script defer src="js/game.js"></script>
 <script defer src="js/main.js"></script>
 <!-- scripts:end -->
+<!-- 繁體中文補丁：不跟著 app.min.js 一起打包壓縮，獨立載入 -->
+<script defer src="js/zh-hant-patch.js"></script>
 </body>
 </html>

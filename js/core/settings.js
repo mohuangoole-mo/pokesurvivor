@@ -13,7 +13,8 @@
  */
 G.Settings = (() => {
   const KEY = 'ps.settings';
-  const DEF = { quality: 'auto', dmgNumbers: true, calm: false, fps: false, stick: 1 };
+  const DEF = { quality: 'auto', dmgNumbers: true, calm: false, fps: false, stick: 1,
+    difficulty: 'normal', cheatGod: false, cheatDmgMul: 1, cheatCoins: false, cheatTickets: false, cheatDexAll: false };
   let s = Object.assign({}, DEF);
   try { Object.assign(s, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { /* nada */ }
   const fns = new Set();

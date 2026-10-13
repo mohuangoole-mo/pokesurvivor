@@ -86,7 +86,7 @@ G.Player = class Player {
   cy() { return this.y; }
 
   // ---------------- stats efectivos ----------------
-  get atk() { return this.baseAtk * this.atkMul * (1 + this.buffs.atk.n * this.buffs.atk.amount); }
+  get atk() { return this.baseAtk * this.atkMul * (1 + this.buffs.atk.n * this.buffs.atk.amount) * (G.Cheats ? G.Cheats.dmgMul() : 1); }
   get spd() {
     const s = this.baseSpd * this.spdMul * (1 + this.buffs.spd.n * this.buffs.spd.amount) * (this.slowT > 0 ? 0.5 : 1);
     const w = G.Weather.speedFor(this.mon.types);
@@ -224,6 +224,7 @@ G.Player = class Player {
   /** @param type  tipo del ataque (tabla de tipos y clima); sin tipo, daño tal cual */
   hurt(amount, type = null) {
     if (this.invuln > 0 || this.dead) return;
+    if (G.Cheats && G.Cheats.godMode()) return;
     let eff = null;
     if (type) {
       const k = G.Types.mult(type, this.mon.types);
@@ -267,7 +268,7 @@ G.Player = class Player {
 
   /** Devuelve cuántos niveles ha subido (pueden ser varios de golpe). */
   gainXp(amount) {
-    this.xp += amount * this.xpMul;
+    this.xp += amount * this.xpMul * (G.Cheats ? G.Cheats.xpMul() : 1);
     let leveled = 0;
     while (this.xp >= this.xpNext) {
       this.xp -= this.xpNext;

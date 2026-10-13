@@ -101,6 +101,8 @@ G.SettingsUI = (() => {
            </div>`;
     } else if (tab === 'acc') {
       renderAccount(box);
+    } else if (tab === 'cheat') {
+      renderCheats(box);
     } else {
       box.innerHTML = `<div class="about-logo">PokéSurvivor</div><p class="sub center">Versión ${esc(VERSION)}</p>`
         + `<p class="sub">Juego de fans <b>gratuito y sin ánimo de lucro</b>: sin anuncios ni compras. Pokémon y sus personajes son propiedad de Nintendo, Creatures y GAME FREAK; este proyecto no está afiliado a ellos.</p>`
@@ -143,7 +145,38 @@ G.SettingsUI = (() => {
          </div><p class="note" id="set-msg"></p>`;
   }
 
+  function renderCheats(box) {
+    box.innerHTML = section('難度', '切換後立刻生效，下一局就有效果。')
+      + choice('difficulty', [['easy', '簡單（怪量正常·經驗×2）'], ['normal', '普通（原始狀態）'], ['hard', '困難（怪量×3）'], ['hell', '地獄（怪量×10）']])
+      + section('戰鬥')
+      + toggle('cheatGod', '無敵模式', '完全不會被打死（還是會看到受擊特效）。')
+      + `<div class="set-row"><div class="grow"><b>攻擊傷害倍率</b><small>影響全部招式的輸出傷害。</small></div></div>`
+      + choice('cheatDmgMul', [[1, '×1'], [2, '×2'], [5, '×5'], [10, '×10'], [50, '×50']])
+      + section('資源', '每秒自動補滿，開著就一直是滿的。')
+      + toggle('cheatCoins', '金幣無限', '寶可幣會一直維持在 999,999,999。')
+      + toggle('cheatTickets', '抽獎券無限', '單抽券與十連券都會一直是滿的。')
+      + toggle('cheatDexAll', '圖鑑全開', '所有寶可夢（含異色）直接標記成已擁有。')
+      + section('一次性動作')
+      + `<div class="row wrap" style="gap:8px">
+           <button class="btn gold" data-act="wildShiny">下一隻野生必異色</button>
+           <button class="btn gold" data-act="gachaShiny">下一抽必異色</button>
+           <button class="btn gold" data-act="maxUp">強化全滿</button>
+           <button class="btn gold" data-act="allMissions">任務／成就全完成</button>
+         </div>`;
+  }
+
   function wire(box) {
+    box.querySelectorAll('[data-act]').forEach(b => {
+      b.onclick = () => {
+        const C = G.Cheats;
+        if (!C) return;
+        if (b.dataset.act === 'wildShiny') C.forceWildShiny(3);
+        else if (b.dataset.act === 'gachaShiny') C.forceGachaShiny(1);
+        else if (b.dataset.act === 'maxUp') C.maxUpgrades();
+        else if (b.dataset.act === 'allMissions') { C.completeMissions(); C.completeAchievements(); }
+        G.UI.toast('完成');
+      };
+    });
     box.querySelectorAll('.switch[data-k]').forEach(b => { b.onclick = () => { G.Settings.set(b.dataset.k, !G.Settings.get(b.dataset.k)); render(); }; });
     box.querySelectorAll('.chip[data-k]').forEach(b => {
       b.onclick = () => { const v = b.dataset.v; G.Settings.set(b.dataset.k, isNaN(+v) ? v : +v); render(); };
