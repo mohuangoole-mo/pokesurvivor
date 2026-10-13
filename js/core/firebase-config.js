@@ -8,17 +8,16 @@
  *
  * Si se pone a null, el juego funciona en modo local (sólo en el navegador).
  */
-// Proyecto pokesurvivor-free (desde el 12-10-2026): autenticación normal de Firebase,
-// SIN Identity Platform, así las cuentas son gratis sin límite. ¡No pulsar nunca
-// "Actualizar a Identity Platform" en su consola! (El viejo era pokesurvivor-jpter.)
+// Mo 自己的 Firebase 專案（poke-bac05，2026-10-13 換上）。
+// 注意：還沒有 databaseURL，代表多人房間用的 Realtime Database 還沒開，
+// 之後若要開「邀朋友一起玩」功能，照 docs/FIREBASE.md 第 3b 步設定後補上即可。
 G.FIREBASE_CONFIG = {
-  apiKey: 'AIzaSyB1LpJcsnT7gj7c8cpRMGjhswLPr8-dnBw',
-  authDomain: 'pokesurvivor-free.firebaseapp.com',
-  projectId: 'pokesurvivor-free',
-  storageBucket: 'pokesurvivor-free.firebasestorage.app',
-  messagingSenderId: '798271504277',
-  appId: '1:798271504277:web:dcac4409f969239e87009c',
-  databaseURL: 'https://pokesurvivor-free-default-rtdb.europe-west1.firebasedatabase.app'
+  apiKey: 'AIzaSyAhHIBUK-WUyavlMe5O7HI_whPZHyNFKRI',
+  authDomain: 'poke-bac05.firebaseapp.com',
+  projectId: 'poke-bac05',
+  storageBucket: 'poke-bac05.firebasestorage.app',
+  messagingSenderId: '517822086554',
+  appId: '1:517822086554:web:28dbdc6d4c217edd288e23'
 };
 
 /* Ejemplo de cómo debe quedar:
