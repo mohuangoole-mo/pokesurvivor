@@ -164,7 +164,7 @@ G.SettingsUI = (() => {
       ? `<p class="sub">目前格子已經學滿，可以選一個新屬性，開出下一格：</p>
          <div class="chips set-chips">${Object.keys(TYPE_ZH).filter(t => !picked.includes(t))
            .map(t => `<button class="chip" data-type="${t}">${esc(TYPE_ZH[t])}</button>`).join('')}</div>`
-      : `<p class="sub">目前招式格還沒學滿（${pl.slots.length}/${pl.maxMoves}），先把現有格子學滿才能選下一個屬性。</p>`;
+      : `<p class="sub">目前招式格還沒學滿（${pl.moves.length}/${G.Cheats.typeExpandCap(pl)}），先把現有格子學滿才能選下一個屬性。</p>`;
     return `<div class="set-row"><div class="grow"><b>已解鎖的額外屬性</b></div></div><div class="chips set-chips">${tags}</div>` + picker;
   }
 

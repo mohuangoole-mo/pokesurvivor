@@ -33,8 +33,14 @@ G.Cheats = (() => {
     return [...ids];
   }
 
-  /** 是否已經把目前的格子學滿，可以選下一個額外屬性了。 */
-  function canPickType(pl) { return pl.slots.length >= pl.maxMoves; }
+  /** 元素擴充學習自己的格子上限：4 + 已選的額外屬性數。
+   *  注意：不能直接用 pl.maxMoves，因為「招式全部合一」開著時 maxMoves 會變成 99，
+   *  會讓這裡永遠學不滿（這就是 Mo 回報「10/99 但角色招式已經學滿」的原因）。 */
+  function typeExpandCap(pl) { return 4 + ((pl.extraTypes && pl.extraTypes.length) || 0); }
+
+  /** 是否已經把目前的格子學滿，可以選下一個額外屬性了。用 pl.moves.length（實際學會的招式數，
+   *  不受裂縫合體 bonds 影響 slots.length 的問題），跟自己的格子上限比較，不借用 pl.maxMoves。 */
+  function canPickType(pl) { return pl.moves.length >= typeExpandCap(pl); }
 
   /** 選一個額外屬性：學滿才能選，同屬性不能重複選。 */
   function pickType(pl, type) {
@@ -71,8 +77,9 @@ G.Cheats = (() => {
     if (!typeExpand()) return;
     const pl = G.Game && G.Game.player;
     if (!pl || pl.dead || !canPickType(pl)) return;
-    if (pl._typeExpandNotifiedAt === pl.maxMoves) return;   // 這一格已經提示過了，別一直彈
-    pl._typeExpandNotifiedAt = pl.maxMoves;
+    const cap = typeExpandCap(pl);
+    if (pl._typeExpandNotifiedAt === cap) return;   // 這一格已經提示過了，別一直彈
+    pl._typeExpandNotifiedAt = cap;
     if (G.Game.state === 'playing') G.Game.togglePause();
     if (G.SettingsUI && !G.SettingsUI.isOpen) G.SettingsUI.open('cheat');
   }
@@ -118,7 +125,7 @@ G.Cheats = (() => {
   setInterval(applySave, 1000);
 
   return { spawnMul, capMul, xpMul, godMode, dmgMul, allMoves, applySave,
-           typeExpand, extraPool, canPickType, pickType,
+           typeExpand, extraPool, canPickType, pickType, typeExpandCap,
            completeMissions, completeAchievements, maxUpgrades,
            forceWildShiny, forceGachaShiny, forceRift };
 })();
