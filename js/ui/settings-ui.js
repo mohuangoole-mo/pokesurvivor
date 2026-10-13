@@ -98,6 +98,7 @@ G.SettingsUI = (() => {
              <div><kbd>Q</kbd> / <kbd>E</kbd></div><span>ataque anterior / siguiente</span>
              <div><kbd>Esc</kbd> o <kbd>P</kbd></div><span>pausa</span>
              <div><kbd>1</kbd>–<kbd>3</kbd></div><span>elegir carta al subir de nivel</span>
+             <div><kbd>R</kbd></div><span>金手指：強制開啟裂縫</span>
            </div>`;
     } else if (tab === 'acc') {
       renderAccount(box);

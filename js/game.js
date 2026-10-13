@@ -486,6 +486,8 @@ G.Game = (() => {
     }
     if (G.Input.tap('keyq')) pl.cycle(-1);
     if (G.Input.tap('keye') || G.Input.tap('tab')) pl.cycle(1);
+    // 金手指快捷鍵：按 R 強制開啟裂縫。
+    if (G.Input.tap('keyr')) G.Cheats && G.Cheats.forceRift();
   }
 
   // ---------------- bucle ----------------
