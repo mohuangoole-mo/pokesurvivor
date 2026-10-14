@@ -805,14 +805,17 @@ a.btn { text-decoration: none; display: inline-block; color: var(--ink); }
      登出跟圖鑑/支持/音效/設定這些比較少按的按鈕，直的排成一欄貼右邊
      （.topbar-tools），兩邊各自縮小一點。 */
   .topbar { align-items: flex-start; max-width: calc(100vw - 32px); gap: 6px; }
-  .topbar-pills { display: flex; flex-wrap: wrap; gap: 4px; flex: 1 1 auto; min-width: 0; }
+  /* 一定要擠在同一排，不能換行：寧可每顆再縮小一點字，也不要跳成兩排。 */
+  .topbar-pills { display: flex; flex-wrap: nowrap; gap: 3px; flex: 1 1 auto; min-width: 0; }
   .topbar-tools { display: flex; flex-direction: column; align-items: stretch; gap: 4px; flex: 0 0 auto; }
   .topbar .btn.small { padding: 4px 8px; font-size: 12px; }
   #btn-support span { display: none; }
-  .pill { padding: 3px 8px; font-size: 12px; gap: 4px; }
-  #user-pill { max-width: 90px; overflow: hidden; white-space: nowrap; }
-  /* 按鈕欄變直的之後比原本高，選單內容要多留一點頂部空間才不會被蓋住。 */
-  #scr-menu { padding-top: calc(210px + env(safe-area-inset-top, 0px)); }
+  .pill { padding: 2px 6px; font-size: 10px; gap: 3px; white-space: nowrap; }
+  #user-pill { max-width: 60px; overflow: hidden; white-space: nowrap; }
+  /* 按鈕欄雖然是直的一欄，但那只佔右邊一小條；中間/左邊的內容只要閃開「金幣/
+     抽獎券/暱稱」那一排就好，不用整個往下留一大塊空白去閃右邊那欄的高度
+     （這就是上次標題被硬推下去、選單被擠到要內部捲動的原因）。 */
+  #scr-menu { padding-top: calc(50px + env(safe-area-inset-top, 0px)); }
   /* 下面的選單跟遊玩紀錄也再縮小一點。 */
   .menu-right .box { padding: 8px 12px; }
   .menu-item { font-size: 13px; padding: 5px 8px; }
