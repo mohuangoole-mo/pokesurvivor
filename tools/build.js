@@ -33,6 +33,12 @@ const min = fs.readFileSync(outJs);
 const hash = crypto.createHash('sha1').update(min).digest('hex').slice(0, 10);
 
 let html = dev.slice(0, i) + `<script defer src="js/app.min.js?v=${hash}"></script>` + dev.slice(j + END.length);
+// css/style.css también necesita huella en la URL: si no, el navegador puede
+// seguir sirviendo la versión en caché (10 min) aunque index.html ya esté
+// actualizado, y los cambios de estilo (como el modo vertical) no se ven
+// hasta que caduque el caché por su cuenta.
+const cssHash = crypto.createHash('sha1').update(fs.readFileSync(path.join(ROOT, 'css', 'style.css'))).digest('hex').slice(0, 10);
+html = html.replace(/href="css\/style\.css(?:\?v=[a-f0-9]+)?"/, `href="css/style.css?v=${cssHash}"`);
 html = html.replace(/<meta name="robots" content="noindex">\s*/, '');
 // --sin-seo: sin canonical/redes/datos estructurados ni enlaces a las páginas
 // (para publicar antes de tener el dominio pokesurvivor.com).
