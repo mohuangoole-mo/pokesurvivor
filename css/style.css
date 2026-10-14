@@ -421,15 +421,31 @@ kbd {
      在內容比畫面高、要捲動的情況下，會算出一大段用不到的空白（頭像卡跟下面的
      選單框中間空一大塊）。改成由上往下自然排列，跟著內容多高就多高。 */
   #scr-menu { flex-direction: column; justify-content: flex-start; overflow-y: auto; }
-  .menu-left { flex: none; }
-  .menu-right { width: 100%; background: rgba(5,10,25,.7); }
+  .menu-left { flex: none; padding: 0 20px; }
+  /* .menu-right 原本自己也留了 70px 頂部空間（橫式兩欄版型時，只有右欄要閃開工具列）。
+     直式疊成一欄後，最上面是 menu-left，#scr-menu 已經統一留了頂部間距，
+     menu-right 自己這段頂部留白變成重複的，會多出一大段沒用到的空白，拿掉。 */
+  .menu-right { width: 100%; padding: 0 16px; background: rgba(5,10,25,.7); }
   .menu-right > :first-child, .menu-right > :last-child { margin: 0; }
   .split { grid-template-columns: 1fr; }
   .logo .t1 { font-size: 34px; }
   /* 標題跟選單框原本會被固定在畫面邊緣的頂部工具列／版權列蓋住，手機橫式矮螢幕
      那組斷點救不到這裡，另外留間距；再加上瀏海/狀態列的安全距離，因為頂部工具列
      本身也會被瀏海往下推。 */
-  #scr-menu { padding-top: calc(70px + env(safe-area-inset-top, 0px)); padding-bottom: calc(46px + env(safe-area-inset-bottom, 0px)); }
+  #scr-menu { padding-top: calc(62px + env(safe-area-inset-top, 0px)); padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  /* 整頁盡量在一屏內放完，不然要捲動：縮小頭像卡跟選單項目，項目排成兩欄。 */
+  #menu-partner { height: min(20vh, 150px); width: auto; }
+  .partner-card { margin-top: 4px; }
+  .partner-card .nm { font-size: 18px; }
+  .partner-card .lv { font-size: 12px; }
+  .menu-list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .menu-item.play { grid-column: span 2; }
+  .menu-right .box { padding: 10px 14px; }
+  .menu-item { font-size: 15px; padding: 6px 10px; }
+  .menu-item.play { font-size: 20px; }
+  .menu-item small { font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .menu-right { gap: 8px; }
+  .credits-line { display: none !important; }
 }
 
 /* ============ iconos pixel art ============ */
@@ -778,6 +794,14 @@ a.btn { text-decoration: none; display: inline-block; color: var(--ink); }
 .news-day ul { margin: 0; padding-left: 20px; }
 .news-day li { margin: 4px 0; line-height: 1.35; font-size: 15px; }
 @media (max-width: 760px) { .news-btn span { display: none; } }
+@media (max-width: 480px) {
+  /* 直式手機太窄：工具列 6 顆按鈕原本排不下，最左邊那顆會被擠出畫面外、看不到也點不到。 */
+  .topbar { gap: 4px; }
+  .topbar .btn.small { padding: 5px 8px; font-size: 13px; }
+  #btn-support span { display: none; }
+  .pill { padding: 4px 9px; font-size: 13px; gap: 5px; }
+  #user-pill { max-width: 90px; overflow: hidden; white-space: nowrap; }
+}
 .sup-tab { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 15px; }
 .sup-tab td { padding: 5px 4px; border-bottom: 1px solid rgba(255,255,255,.1); }
 .sup-tab td.num { text-align: right; white-space: nowrap; }
