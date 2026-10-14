@@ -809,7 +809,11 @@ a.btn { text-decoration: none; display: inline-block; color: var(--ink); }
 .news-day ul { margin: 0; padding-left: 20px; }
 .news-day li { margin: 4px 0; line-height: 1.35; font-size: 15px; }
 @media (max-width: 760px) { .news-btn span { display: none; } }
-@media (max-width: 480px) {
+@media (max-width: 760px) and (min-height: 521px) {
+  /* 原本這段卡在 480px 門檻，Mo 的手機直放寬度顯然超過 480（從他截圖看得出來，
+     套用到的只有 760px 那組規則，480px 這組完全沒生效），工具列才會整個打回
+     原本沒拆過的樣子。改成跟其他直式規則統一用 760px，门檻不要比別的規則窄；
+     順便加上 min-height，跟手機橫式矮螢幕那組區分開，避免互相干擾。 */
   /* #topbar 是 position:fixed，整個遊戲裡每個畫面上面都會浮著它，不是只有主選單。
      「登出+圖鑑/支持/音效/設定排成直的一欄」這個排法只適合主選單（因為只有主選單
      把下面內容讓開了這一欄）；圖鑑、好友、排行榜這些畫面自己右上角有「返回」等
