@@ -251,6 +251,8 @@ label { display: block; font-size: 14px; color: var(--muted); margin: 8px 0 4px;
 }
 .menu-right > :first-child { margin-top: auto; }
 .menu-right > :last-child { margin-bottom: auto; }
+.menu-stats-box { padding: 14px 18px; }
+#menu-stats { font-size: 14px; color: var(--muted); }
 /* Portátiles con poca altura: menú más compacto y, si hace falta, en dos columnas. */
 @media (max-height: 780px) and (min-height: 521px) {
   .menu-right { padding-top: 62px; gap: 10px; }
@@ -271,6 +273,9 @@ label { display: block; font-size: 14px; color: var(--muted); margin: 8px 0 4px;
   position: fixed; top: calc(14px + env(safe-area-inset-top, 0px)); right: 16px; z-index: 25;
   display: flex; gap: 10px; align-items: center;
 }
+/* 桌機/橫式維持原本「全部排一排」的樣子：這兩個分組 div 不影響版面。
+   窄螢幕直式才會改成「金幣/抽獎券/暱稱排一排＋登出和其他按鈕排成一直欄」。 */
+.topbar-pills, .topbar-tools { display: contents; }
 .pill {
   display: flex; align-items: center; gap: 8px;
   padding: 6px 14px; border-radius: 30px;
@@ -796,21 +801,25 @@ a.btn { text-decoration: none; display: inline-block; color: var(--ink); }
 .news-day li { margin: 4px 0; line-height: 1.35; font-size: 15px; }
 @media (max-width: 760px) { .news-btn span { display: none; } }
 @media (max-width: 480px) {
-  /* 直式手機太窄：工具列全部擠在一行放不下，金幣/抽獎券/暱稱這些常看的資訊會被
-     擠到畫面外、連抽獎券都看不到。改成最多兩行：金幣/抽獎券/暱稱（HTML 本來就排
-     在前面）留在第一行，圖鑑/支持/音效/設定/登出這些比較少按的按鈕自動換到第二
-     行，不會互搶空間。 */
-  .topbar {
-    flex-wrap: wrap; justify-content: flex-end;
-    max-width: calc(100vw - 32px);
-    gap: 4px 6px;
-  }
-  .topbar .btn.small { padding: 5px 8px; font-size: 13px; }
+  /* 直式手機太窄，按 Mo 的要求重排：金幣/抽獎券/暱稱排成一排（.topbar-pills），
+     登出跟圖鑑/支持/音效/設定這些比較少按的按鈕，直的排成一欄貼右邊
+     （.topbar-tools），兩邊各自縮小一點。 */
+  .topbar { align-items: flex-start; max-width: calc(100vw - 32px); gap: 6px; }
+  .topbar-pills { display: flex; flex-wrap: wrap; gap: 4px; flex: 1 1 auto; min-width: 0; }
+  .topbar-tools { display: flex; flex-direction: column; align-items: stretch; gap: 4px; flex: 0 0 auto; }
+  .topbar .btn.small { padding: 4px 8px; font-size: 12px; }
   #btn-support span { display: none; }
-  .pill { padding: 4px 9px; font-size: 13px; gap: 5px; }
-  #user-pill { max-width: 110px; overflow: hidden; white-space: nowrap; }
-  /* 工具列換成兩行後變高了，選單內容要多留一點頂部空間才不會被蓋住。 */
-  #scr-menu { padding-top: calc(104px + env(safe-area-inset-top, 0px)); }
+  .pill { padding: 3px 8px; font-size: 12px; gap: 4px; }
+  #user-pill { max-width: 90px; overflow: hidden; white-space: nowrap; }
+  /* 按鈕欄變直的之後比原本高，選單內容要多留一點頂部空間才不會被蓋住。 */
+  #scr-menu { padding-top: calc(210px + env(safe-area-inset-top, 0px)); }
+  /* 下面的選單跟遊玩紀錄也再縮小一點。 */
+  .menu-right .box { padding: 8px 12px; }
+  .menu-item { font-size: 13px; padding: 5px 8px; }
+  .menu-item.play { font-size: 18px; }
+  .menu-item small { font-size: 9px; }
+  .menu-stats-box { padding: 8px 12px; }
+  #menu-stats { font-size: 12px; }
 }
 .sup-tab { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 15px; }
 .sup-tab td { padding: 5px 4px; border-bottom: 1px solid rgba(255,255,255,.1); }

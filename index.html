@@ -22,7 +22,7 @@
 <link rel="preload" href="assets/fonts/PixelifyPS-400.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" href="assets/fonts/PixelifyPS-700.ttf" as="font" type="font/ttf" crossorigin>
 
-<link rel="stylesheet" href="css/style.css?v=e111396118">
+<link rel="stylesheet" href="css/style.css?v=3d691bd4c2">
 </head>
 <body>
 
@@ -130,22 +130,26 @@
         <button class="menu-item" data-go="settings">Ajustes<small>Sonido, gráficos, controles y cuenta</small></button>
       </div>
     </div>
-    <div class="box" style="padding:14px 18px">
-      <div id="menu-stats" style="font-size:14px;color:var(--muted)"></div>
+    <div class="box menu-stats-box">
+      <div id="menu-stats"></div>
     </div>
   </div>
 </section>
 
 <div id="topbar" class="topbar hidden">
-  <div class="pill"><span class="coin"></span><span id="coins">0</span></div>
-  <div class="pill" id="tickets-pill" title="Tickets del gacha"></div>
-  <div class="pill" id="user-pill"></div>
-  <button id="btn-news" class="btn small ghost news-btn" title="Novedades"></button>
-  <button id="btn-support" class="btn small gold hidden" title="Apoyar el proyecto"></button>
-  <button id="btn-sound" class="btn small ghost" title="Sonido"></button>
-  <button id="btn-full" class="btn small ghost hidden" title="Pantalla completa"></button>
-  <button id="btn-settings" class="btn small ghost" title="Ajustes"></button>
-  <button id="btn-logout" class="btn small ghost">Salir</button>
+  <div class="topbar-pills">
+    <div class="pill"><span class="coin"></span><span id="coins">0</span></div>
+    <div class="pill" id="tickets-pill" title="Tickets del gacha"></div>
+    <div class="pill" id="user-pill"></div>
+  </div>
+  <div class="topbar-tools">
+    <button id="btn-logout" class="btn small ghost">Salir</button>
+    <button id="btn-news" class="btn small ghost news-btn" title="Novedades"></button>
+    <button id="btn-support" class="btn small gold hidden" title="Apoyar el proyecto"></button>
+    <button id="btn-sound" class="btn small ghost" title="Sonido"></button>
+    <button id="btn-full" class="btn small ghost hidden" title="Pantalla completa"></button>
+    <button id="btn-settings" class="btn small ghost" title="Ajustes"></button>
+  </div>
 </div>
 <div id="sound-panel" class="box sound-panel hidden"></div>
 <div id="credits-line" class="credits-line hidden">Proyecto de fan sin ánimo de lucro · Sprites: SpriteCollab (CC BY-NC 4.0) · Pokémon © Nintendo/Creatures/GAME FREAK · <a href="#" class="legal-link" data-legal>Aviso legal</a></div>
