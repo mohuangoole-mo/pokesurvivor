@@ -425,7 +425,8 @@ kbd {
   /* .menu-right 原本自己也留了 70px 頂部空間（橫式兩欄版型時，只有右欄要閃開工具列）。
      直式疊成一欄後，最上面是 menu-left，#scr-menu 已經統一留了頂部間距，
      menu-right 自己這段頂部留白變成重複的，會多出一大段沒用到的空白，拿掉。 */
-  .menu-right { width: 100%; padding: 0 16px; background: rgba(5,10,25,.7); }
+  /* 不要整條頂到畫面邊緣：留一點兩側的草地，看起來像卡片而不是塞滿版面。 */
+  .menu-right { width: min(420px, 88%); margin: 0 auto; padding: 0; background: rgba(5,10,25,.7); }
   .menu-right > :first-child, .menu-right > :last-child { margin: 0; }
   .split { grid-template-columns: 1fr; }
   .logo .t1 { font-size: 34px; }
@@ -795,12 +796,21 @@ a.btn { text-decoration: none; display: inline-block; color: var(--ink); }
 .news-day li { margin: 4px 0; line-height: 1.35; font-size: 15px; }
 @media (max-width: 760px) { .news-btn span { display: none; } }
 @media (max-width: 480px) {
-  /* 直式手機太窄：工具列 6 顆按鈕原本排不下，最左邊那顆會被擠出畫面外、看不到也點不到。 */
-  .topbar { gap: 4px; }
+  /* 直式手機太窄：工具列全部擠在一行放不下，金幣/抽獎券/暱稱這些常看的資訊會被
+     擠到畫面外、連抽獎券都看不到。改成最多兩行：金幣/抽獎券/暱稱（HTML 本來就排
+     在前面）留在第一行，圖鑑/支持/音效/設定/登出這些比較少按的按鈕自動換到第二
+     行，不會互搶空間。 */
+  .topbar {
+    flex-wrap: wrap; justify-content: flex-end;
+    max-width: calc(100vw - 32px);
+    gap: 4px 6px;
+  }
   .topbar .btn.small { padding: 5px 8px; font-size: 13px; }
   #btn-support span { display: none; }
   .pill { padding: 4px 9px; font-size: 13px; gap: 5px; }
-  #user-pill { max-width: 90px; overflow: hidden; white-space: nowrap; }
+  #user-pill { max-width: 110px; overflow: hidden; white-space: nowrap; }
+  /* 工具列換成兩行後變高了，選單內容要多留一點頂部空間才不會被蓋住。 */
+  #scr-menu { padding-top: calc(104px + env(safe-area-inset-top, 0px)); }
 }
 .sup-tab { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 15px; }
 .sup-tab td { padding: 5px 4px; border-bottom: 1px solid rgba(255,255,255,.1); }
