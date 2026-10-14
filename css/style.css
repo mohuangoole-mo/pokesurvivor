@@ -801,17 +801,23 @@ a.btn { text-decoration: none; display: inline-block; color: var(--ink); }
 .news-day li { margin: 4px 0; line-height: 1.35; font-size: 15px; }
 @media (max-width: 760px) { .news-btn span { display: none; } }
 @media (max-width: 480px) {
-  /* 直式手機太窄，按 Mo 的要求重排：金幣/抽獎券/暱稱排成一排（.topbar-pills），
-     登出跟圖鑑/支持/音效/設定這些比較少按的按鈕，直的排成一欄貼右邊
-     （.topbar-tools），兩邊各自縮小一點。 */
-  .topbar { align-items: flex-start; max-width: calc(100vw - 32px); gap: 6px; }
-  /* 一定要擠在同一排，不能換行：寧可每顆再縮小一點字，也不要跳成兩排。 */
-  .topbar-pills { display: flex; flex-wrap: nowrap; gap: 3px; flex: 1 1 auto; min-width: 0; }
-  .topbar-tools { display: flex; flex-direction: column; align-items: stretch; gap: 4px; flex: 0 0 auto; }
+  /* #topbar 是 position:fixed，整個遊戲裡每個畫面上面都會浮著它，不是只有主選單。
+     「登出+圖鑑/支持/音效/設定排成直的一欄」這個排法只適合主選單（因為只有主選單
+     把下面內容讓開了這一欄）；圖鑑、好友、排行榜這些畫面自己右上角有「返回」等
+     按鈕，直的一欄會整個蓋上去。所以預設還是「排不下就換行」，只有偵測到主選單
+     目前顯示中，才切成那個直欄排法。 */
+  .topbar { align-items: flex-start; max-width: calc(100vw - 32px); gap: 4px 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .topbar-pills, .topbar-tools { display: contents; }
   .topbar .btn.small { padding: 4px 8px; font-size: 12px; }
   #btn-support span { display: none; }
   .pill { padding: 2px 6px; font-size: 10px; gap: 3px; white-space: nowrap; }
   #user-pill { max-width: 60px; overflow: hidden; white-space: nowrap; }
+
+  /* 主選單專用排法：金幣/抽獎券/暱稱強制擠成一排不換行，登出跟其他按鈕改直的
+     一欄貼右邊（#topbar 在 DOM 裡排在 #scr-menu 後面，用 ~ 選到它）。 */
+  #scr-menu:not(.hidden) ~ #topbar { flex-wrap: nowrap; justify-content: flex-start; }
+  #scr-menu:not(.hidden) ~ #topbar .topbar-pills { display: flex; flex-wrap: nowrap; gap: 3px; flex: 1 1 auto; min-width: 0; }
+  #scr-menu:not(.hidden) ~ #topbar .topbar-tools { display: flex; flex-direction: column; align-items: stretch; gap: 4px; flex: 0 0 auto; }
   /* 按鈕欄雖然是直的一欄，但那只佔右邊一小條；中間/左邊的內容只要閃開「金幣/
      抽獎券/暱稱」那一排就好，不用整個往下留一大塊空白去閃右邊那欄的高度
      （這就是上次標題被硬推下去、選單被擠到要內部捲動的原因）。 */
