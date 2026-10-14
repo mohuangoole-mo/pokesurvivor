@@ -534,7 +534,7 @@ input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 
 .fr-list { display: flex; flex-direction: column; gap: 6px; max-height: 52vh; overflow-y: auto; padding-right: 4px; }
 .fr-row {
   display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px;
-  background: rgba(0,0,0,.22); border: 2px solid rgba(244,248,255,.14);
+  background: rgba(0,0,0,.22); border: 2px solid rgba(244,248,255,.14); flex-wrap: wrap;
 }
 .fr-row b { font-size: 17px; }
 .fr-row .st { color: var(--muted); font-size: 13px; }
@@ -593,7 +593,7 @@ input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 
 
 /* ---------- tickets y mejoras por Pokémon ---------- */
 .tickets-line img, #tickets-pill img, #cost-1 img, #cost-10 img { vertical-align: middle; }
-.upg-head { display: flex; gap: 14px; align-items: center; margin: 6px 0 12px; }
+.upg-head { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin: 6px 0 12px; }
 .upg-head .stage { width: 120px; height: 96px; flex: 0 0 120px; }
 select.field { font-family: var(--font); }
 
