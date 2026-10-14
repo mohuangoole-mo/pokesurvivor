@@ -18,7 +18,11 @@ G.Camera = {
 
   resize(cssW, cssH, dpr = 1) {
     this.dpr = dpr;
-    this.scale = Math.min(cssW / this.VIEW_W, cssH / this.MIN_VIEW_H);
+    // 直式手機（cssH > cssW）跟橫式是同一套比例邏輯轉 90 度：VIEW_W／MIN_VIEW_H
+    // 這兩個數字互換套用，縮放感覺才會跟橫式玩起來一樣（不會變成視野突然拉得很長很窄）。
+    this.scale = (cssH > cssW)
+      ? Math.min(cssH / this.VIEW_W, cssW / this.MIN_VIEW_H)
+      : Math.min(cssW / this.VIEW_W, cssH / this.MIN_VIEW_H);
     this.w = cssW / this.scale;
     this.h = cssH / this.scale;
   },
