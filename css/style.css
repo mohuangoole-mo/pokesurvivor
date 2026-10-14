@@ -80,6 +80,10 @@ input { font: inherit; }
   padding: 22px 24px;
   text-shadow: 2px 2px 0 var(--shadow);
   animation: pop .22s ease-out;
+  /* 沒有這行的話，裡面只要有一行內容（搜尋欄、固定寬度的欄位…）塞不下，整個框就會
+     被撐得比螢幕還寬，右邊超出螢幕的部分會被 body 的 overflow:hidden 直接切掉、
+     完全看不到也點不到（窄螢幕手機幾乎每個子選單都中這個）。 */
+  max-width: 100%;
   max-height: 100%;
   overflow: auto;
 }
