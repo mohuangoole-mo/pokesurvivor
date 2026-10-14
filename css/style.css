@@ -31,6 +31,9 @@
   --shadow: #0a1430;
   --r1: #9fb1c9; --r2: #5fe08a; --r3: #4fb4ff; --r4: #c47bff; --r5: #ffcb3d;
   --font: 'Pixelify', 'Segoe UI', system-ui, sans-serif;
+  /* 頂部工具列的實際高度，js/ui/ui.js 用 ResizeObserver 量出來隨時更新；下面這個
+     是 JS 跑起來之前的保守預設值，避免還沒量到高度前畫面先疊在一起一下。 */
+  --topbar-h: 48px;
 }
 
 * { box-sizing: border-box; }
@@ -59,8 +62,12 @@ input { font: inherit; }
 .scr.hidden { display: none; }
 /* Pantallas que se abren con la barra superior a la vista: empiezan debajo de ella. */
 @media (min-height: 521px) {
+  /* calc(工具列實際高度 + 工具列自己離畫面頂端的距離 + 一點緩衝) —
+     不再用猜的數字，工具列換行變高、變矮都會自動跟著對。 */
   #scr-goals, #scr-dex, #scr-upgrades, #scr-gacha, #scr-friends, #scr-rank, #scr-lobby, #scr-profile,
-  #scr-settings, #scr-nick, #scr-news, #scr-support, #scr-legal { padding-top: calc(66px + env(safe-area-inset-top, 0px)); }
+  #scr-settings, #scr-nick, #scr-news, #scr-support, #scr-legal {
+    padding-top: calc(var(--topbar-h) + 14px + env(safe-area-inset-top, 0px) + 12px);
+  }
   /* .box.settings/.news-box 原本用 100dvh 自己算高度，沒有扣掉上面這段留白，會比
      畫面實際可用的空間高，往上溢出頂到工具列後面去（看起來關閉鈕點不到）。
      改成跟著外層（已經扣掉留白）的可用空間走就好。 */
@@ -447,7 +454,7 @@ kbd {
   /* 標題跟選單框原本會被固定在畫面邊緣的頂部工具列／版權列蓋住，手機橫式矮螢幕
      那組斷點救不到這裡，另外留間距；再加上瀏海/狀態列的安全距離，因為頂部工具列
      本身也會被瀏海往下推。 */
-  #scr-menu { padding-top: calc(62px + env(safe-area-inset-top, 0px)); padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  #scr-menu { padding-top: calc(var(--topbar-h) + 14px + env(safe-area-inset-top, 0px) + 12px); padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   /* 整頁盡量在一屏內放完，不然要捲動：縮小頭像卡跟選單項目，項目排成兩欄。 */
   #menu-partner { height: min(20vh, 150px); width: auto; }
   .partner-card { margin-top: 4px; }
@@ -501,7 +508,7 @@ img.pix { image-rendering: pixelated; image-rendering: crisp-edges; vertical-ali
 .caught-row small { display: block; font-size: 12px; color: #c9f3ff; }
 
 /* ============ sonido ============ */
-.sound-panel { position: fixed; top: calc(62px + env(safe-area-inset-top, 0px)); right: 16px; z-index: 30; width: 270px; padding: 14px 16px; }
+.sound-panel { position: fixed; top: calc(var(--topbar-h) + 14px + env(safe-area-inset-top, 0px) + 8px); right: 16px; z-index: 30; width: 270px; padding: 14px 16px; }
 .sound-inline { margin: 6px auto 16px; max-width: 320px; }
 .snd-row { display: grid; grid-template-columns: 20px 64px 1fr; gap: 8px; align-items: center; margin-bottom: 10px; font-size: 14px; }
 input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 8px;
@@ -810,31 +817,16 @@ a.btn { text-decoration: none; display: inline-block; color: var(--ink); }
 .news-day li { margin: 4px 0; line-height: 1.35; font-size: 15px; }
 @media (max-width: 760px) { .news-btn span { display: none; } }
 @media (max-width: 760px) and (min-height: 521px) {
-  /* 原本這段卡在 480px 門檻，Mo 的手機直放寬度顯然超過 480（從他截圖看得出來，
-     套用到的只有 760px 那組規則，480px 這組完全沒生效），工具列才會整個打回
-     原本沒拆過的樣子。改成跟其他直式規則統一用 760px，门檻不要比別的規則窄；
-     順便加上 min-height，跟手機橫式矮螢幕那組區分開，避免互相干擾。 */
-  /* #topbar 是 position:fixed，整個遊戲裡每個畫面上面都會浮著它，不是只有主選單。
-     「登出+圖鑑/支持/音效/設定排成直的一欄」這個排法只適合主選單（因為只有主選單
-     把下面內容讓開了這一欄）；圖鑑、好友、排行榜這些畫面自己右上角有「返回」等
-     按鈕，直的一欄會整個蓋上去。所以預設還是「排不下就換行」，只有偵測到主選單
-     目前顯示中，才切成那個直欄排法。 */
+  /* 之前試過「主選單用直的按鈕欄、其他畫面用排不下就換行」這種雙套邏輯，結果每次
+     工具列實際高度跟猜的對不上，就會蓋到下面畫面的內容（返回鈕點不到）。改成
+     全部畫面統一用同一種「排不下就換行」的簡單邏輯，不再特別區分主選單，高度
+     一律用 --topbar-h（JS 實際量出來的）去留間距，不會再對不上。 */
   .topbar { align-items: flex-start; max-width: calc(100vw - 32px); gap: 4px 6px; flex-wrap: wrap; justify-content: flex-end; }
   .topbar-pills, .topbar-tools { display: contents; }
   .topbar .btn.small { padding: 4px 8px; font-size: 12px; }
   #btn-support span { display: none; }
   .pill { padding: 2px 6px; font-size: 10px; gap: 3px; white-space: nowrap; }
-  #user-pill { max-width: 60px; overflow: hidden; white-space: nowrap; }
-
-  /* 主選單專用排法：金幣/抽獎券/暱稱強制擠成一排不換行，登出跟其他按鈕改直的
-     一欄貼右邊（#topbar 在 DOM 裡排在 #scr-menu 後面，用 ~ 選到它）。 */
-  #scr-menu:not(.hidden) ~ #topbar { flex-wrap: nowrap; justify-content: flex-start; }
-  #scr-menu:not(.hidden) ~ #topbar .topbar-pills { display: flex; flex-wrap: nowrap; gap: 3px; flex: 1 1 auto; min-width: 0; }
-  #scr-menu:not(.hidden) ~ #topbar .topbar-tools { display: flex; flex-direction: column; align-items: stretch; gap: 4px; flex: 0 0 auto; }
-  /* 按鈕欄雖然是直的一欄，但那只佔右邊一小條；中間/左邊的內容只要閃開「金幣/
-     抽獎券/暱稱」那一排就好，不用整個往下留一大塊空白去閃右邊那欄的高度
-     （這就是上次標題被硬推下去、選單被擠到要內部捲動的原因）。 */
-  #scr-menu { padding-top: calc(50px + env(safe-area-inset-top, 0px)); }
+  #user-pill { max-width: 90px; overflow: hidden; white-space: nowrap; }
   /* 下面的選單跟遊玩紀錄也再縮小一點。 */
   .menu-right .box { padding: 8px 12px; }
   .menu-item { font-size: 13px; padding: 5px 8px; }

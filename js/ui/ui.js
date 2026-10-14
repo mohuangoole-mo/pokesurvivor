@@ -178,6 +178,19 @@ G.UI = (() => {
       p.classList.toggle('hidden');
       if (!p.classList.contains('hidden')) soundControls(p);
     };
+
+    // 工具列的高度一直在變（手機直式可能換成兩、三行，看金幣位數、暱稱長度）。
+    // 與其用猜的數字留間距（猜錯就會被蓋住），直接量實際高度設成 CSS 變數，
+    // 下面畫面要讓開的間距直接跟著這個變數走，不會再對不上。
+    const tb = $('topbar');
+    const syncTopbarH = () => {
+      document.documentElement.style.setProperty('--topbar-h',
+        (tb.classList.contains('hidden') ? 0 : tb.offsetHeight) + 'px');
+    };
+    if ('ResizeObserver' in window) new ResizeObserver(syncTopbarH).observe(tb);
+    new MutationObserver(syncTopbarH).observe(tb, { attributes: true, attributeFilter: ['class'] });
+    addEventListener('resize', syncTopbarH);
+    syncTopbarH();
   }
 
   // ---------------- sprites en canvas del DOM ----------------
