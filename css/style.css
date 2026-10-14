@@ -421,6 +421,9 @@ kbd {
   .menu-right { width: 100%; background: rgba(5,10,25,.7); }
   .split { grid-template-columns: 1fr; }
   .logo .t1 { font-size: 34px; }
+  /* 直式手機（窄但高）：標題跟選單框原本會被固定在畫面邊緣的頂部工具列／版權列蓋住，
+     手機橫式矮螢幕那組斷點救不到這裡，另外留間距。 */
+  #scr-menu { padding-top: 70px; padding-bottom: 46px; }
 }
 
 /* ============ iconos pixel art ============ */
